@@ -9,11 +9,10 @@ struct Trade {
     Quantity quantity;     
 
     bool operator==(const Trade& other) const {
-    return buy_order_id == other.buy_order_id &&
-           sell_order_id == other.sell_order_id &&
+    return testingOrderId == other.restingOrderId &&
+           incomingOrderId == other.incomingOrderId &&
            price == other.price &&
            quantity == other.quantity;
-}
-
+    }
 };
 #endif
