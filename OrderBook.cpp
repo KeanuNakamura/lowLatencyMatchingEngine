@@ -5,7 +5,16 @@
 #include <algorithm>
 #include <iostream>
 
-std::vector<Trade> OrderBook::addOrder(Order order){
+std::vector<Trade> OrderBook::addOrder(Order order) {
+    if (order.side == Side::Buy) {
+        return buyOrder(order);
+    } else {
+        return sellOrder(order); 
+    }
+}
+
+
+std::vector<Trade> OrderBook::buyOrder(Order order){
     std::vector<Trade> trades; 
     while (order.quantity > 0 && !asks.empty()) {
         auto it = asks.begin(); 

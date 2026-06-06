@@ -11,7 +11,6 @@
 class OrderBook {
     public: 
         std::vector<Trade> addOrder(Order order);
-        std::vector<Trade> sellOrder(Order order); 
         bool cancelOrder(OrderId id); 
 
         std::optional<Price> bestBid() const; 
@@ -20,6 +19,9 @@ class OrderBook {
         Quantity quantityAtAsk(Price price) const; 
 
     private:
+
+        std::vector<Trade> sellOrder(Order order); 
+        std::vector<Trade> buyOrder(Order order); 
         using OrderList = std::list<Order>; 
         std::map<Price, OrderList, std::greater<Price>> bids; //greatest to lowest
         std::map<Price, OrderList> asks;  //sorted lowest to greatest
