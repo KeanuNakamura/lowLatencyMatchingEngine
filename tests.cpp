@@ -51,10 +51,47 @@ void testAddSellOrder2(){
     assert(book.quantityAtBid(50)==30);
 }
 
+void testAddSellOrder3(){
+    OrderBook book;
+
+    Order order1{Side::Sell, OrderType::Limit, 1, 100, 10, 1};
+    Order order2{Side::Sell, OrderType::Limit, 2, 50, 10, 2};
+
+    book.addOrder(order1);
+    book.addOrder(order2);
+
+    assert(book.quantityAtAsk(100) == 10);
+    assert(book.quantityAtAsk(50) == 10);
+
+    Order order3{Side::Buy, OrderType::Limit, 3, 80, 10, 3};
+    book.addOrder(order3);
+
+    assert(book.quantityAtAsk(50) == 0);
+
+    Order order4{Side::Buy, OrderType::Limit, 4, 120, 20, 4};
+    book.addOrder(order4);
+
+    assert(book.quantityAtAsk(100) == 0);
+    assert(book.quantityAtBid(120) == 10);
+}
+
+void testCancellation() {
+    OrderBook book; 
+    Order order1{Side::Buy, OrderType::Limit, 1, 50, 20, 1};
+    Order order2{Side::Buy, OrderType::Limit, 2, 50, 40, 2};
+    book.addOrder(order1); 
+    book.addOrder(order2); 
+    assert(book.cancelOrder(1) == true); 
+    assert(book.quantityAtBid(50) == 40); 
+    assert(book.cancelOrder(1) == false); 
+    assert(book.cancelOrder(300) == false); 
+}
+
 int main() {
     test_empty_book_has_zero_quantity(); 
     testAddSellOrder(); 
     testAddSellOrder2(); 
+    testCancellation(); 
     return 0; 
 
 }
