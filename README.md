@@ -1,2 +1,2 @@
 # lowLatencyMatchingEngine
-C++ low latency matoching engine
+C++ low latency matching engine
