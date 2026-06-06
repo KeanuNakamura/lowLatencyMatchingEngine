@@ -19,11 +19,11 @@ void testAddSellOrder(){
     assert(book.quantityAtBid(100) == 10); 
 
     Order order3{Side::Sell, OrderType::Limit, 3, 80, 10, 3}; 
-    book.sellOrder(order3); 
+    book.addOrder(order3); 
     assert(book.quantityAtBid(100) == 0); 
     
     Order order4{Side::Sell, OrderType::Limit, 4, 30, 20, 4}; 
-    book.sellOrder(order4); 
+    book.addOrder(order4); 
     assert(book.quantityAtBid(50) == 0); 
     assert(book.quantityAtAsk(30) == 10); 
 }
@@ -41,7 +41,7 @@ void testAddSellOrder2(){
     assert(book.quantityAtBid(50) == 60);
     
     Order order5{Side::Sell, OrderType::Limit, 5, 40, 50, 5};
-    std::vector<Trade> trades = book.sellOrder(order5); 
+    std::vector<Trade> trades = book.addOrder(order5); 
     Trade trade1{4, 5, 100, 10};
     Trade trade2{3, 5, 70, 10};
     Trade trade3{1, 5, 50, 20}; 
