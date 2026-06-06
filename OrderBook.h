@@ -5,6 +5,8 @@
 #include <unordered_map> 
 #include <list> 
 #include <vector> 
+#include "Order.h" 
+#include "Trade.h"
 
 class OrderBook {
     public: 
@@ -18,7 +20,7 @@ class OrderBook {
         Quantity quantityAtAsk(Price price) const; 
 
     private:
-        using OrderList std::list<Order>; 
+        using OrderList = std::list<Order>; 
         std::map<Price, OrderList, std::greater<Price>> bids; //greatest to lowest
         std::map<Price, OrderList> asks;  //sorted lowest to greatest
         
@@ -26,7 +28,7 @@ class OrderBook {
             Side side; 
             Price price;
             OrderList::iterator iterator;  
-        }
+        };
         std::unordered_map<OrderId, OrderLocation> order_locations; 
-}
+};
 #endif

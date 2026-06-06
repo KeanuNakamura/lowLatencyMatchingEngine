@@ -3,8 +3,8 @@
 #include "OrderBook.h" 
 #include <vector> 
 #include <algorithm>
+#include <iostream>
 
-OrderBook::OrderBook()
 std::vector<Trade> OrderBook::addOrder(Order order){
     std::vector<Trade> trades; 
     while (order.quantity > 0 && !asks.empty()) {
@@ -13,11 +13,11 @@ std::vector<Trade> OrderBook::addOrder(Order order){
         OrderList& orderlist = it->second; 
         Order& firstOrder = orderlist.front(); 
         
-        if (order.type == Limit && order.price < bestAsk) {
+        if (order.type == OrderType::Limit && order.price < bestAsk) {
            break;  
         }
 
-        int tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
+        Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
         Trade trade{firstOrder.id, order.id, bestAsk, tradeQuantity}; 
         trades.push_back(trade); 
         
@@ -51,11 +51,11 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
         OrderList& orderlist = it->second; 
         Order& firstOrder = orderlist.front(); 
         
-        if (order.type == Limit && order.price > bestBid) {
+        if (order.type == OrderType::Limit && order.price > bestBid) {
            break;  
         }
 
-        int tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
+        Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
         Trade trade{firstOrder.id, order.id, bestBid, tradeQuantity}; 
         trades.push_back(trade); 
         
@@ -81,7 +81,7 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
 }
 
 bool OrderBook::cancelOrder(OrderId order_id) {
-    auto it order_locations.find(order_id); 
+    auto it = order_locations.find(order_id); 
     if (it == order_locations.end()) {
         return false;
     }  
@@ -116,13 +116,13 @@ std::optional<Price> OrderBook::bestBid() const {
 
 std::optional<Price> OrderBook::bestAsk() const {
     if (asks.empty()) {
-        return std::nulopt; 
+        return std::nullopt; 
     }
     auto it = asks.begin(); 
     return it->first; 
 }
 
-Quantity quantityAtBid(Price price) const {
+Quantity OrderBook::quantityAtBid(Price price) const {
     auto it = bids.find(price); 
     if (it == bids.end()) {
         return 0; 
@@ -136,7 +136,7 @@ Quantity quantityAtBid(Price price) const {
 }
 
 
-Quantity quantityAtAsk(Price price) const {
+Quantity OrderBook::quantityAtAsk(Price price) const {
     auto it = asks.find(price); 
     if (it == asks.end()) {
         return 0; 

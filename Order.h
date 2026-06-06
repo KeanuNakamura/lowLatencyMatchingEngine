@@ -1,5 +1,6 @@
 #ifndef ORDER_H
 #define ORDER_H
+#include <iostream> 
 
 enum class Side {
     Buy,
@@ -23,6 +24,6 @@ struct Order {
     Price price;
     Quantity quantity;
     Timestamp timestamp;
-}
+};
 
 #endif
