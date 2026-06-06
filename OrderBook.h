@@ -8,8 +8,15 @@
 
 class OrderBook {
     public: 
-        std::vector addOrder(Order order);
+        std::vector<Trade> addOrder(Order order);
+        std::vector<Trade> sellOrder(Order order); 
         bool cancelOrder(OrderId id); 
+
+        std::optional<Price> bestBid() const; 
+        std::optional<Price> bestAsk() const; 
+        Quantity quantityAtBid(Price price) const; 
+        Quantity quantityAtAsk(Price price) const; 
+
     private:
         using OrderList std::list<Order>; 
         std::map<Price, OrderList, std::greater<Price>> bids; //greatest to lowest
@@ -22,4 +29,4 @@ class OrderBook {
         }
         std::unordered_map<OrderId, OrderLocation> order_locations; 
 }
-#endif 
+#endif

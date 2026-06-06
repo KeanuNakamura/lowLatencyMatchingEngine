@@ -106,3 +106,45 @@ bool OrderBook::cancelOrder(OrderId order_id) {
     return true; 
 }
 
+std::optional<Price> OrderBook::bestBid() const {
+    if (bids.empty()) {
+        return std::nullopt; 
+    }
+    auto it = bids.begin(); 
+    return it->first; 
+}
+
+std::optional<Price> OrderBook::bestAsk() const {
+    if (asks.empty()) {
+        return std::nulopt; 
+    }
+    auto it = asks.begin(); 
+    return it->first; 
+}
+
+Quantity quantityAtBid(Price price) const {
+    auto it = bids.find(price); 
+    if (it == bids.end()) {
+        return 0; 
+    }
+    Quantity total{}; 
+    const auto& orderList =  it->second; 
+    for (auto iter = orderList.begin(); iter != orderList.end(); ++iter) {
+        total += iter->quantity; 
+    }
+    return total; 
+}
+
+
+Quantity quantityAtAsk(Price price) const {
+    auto it = asks.find(price); 
+    if (it == asks.end()) {
+        return 0; 
+    }
+    Quantity total{}; 
+    const auto& orderList =  it->second; 
+    for (auto iter = orderList.begin(); iter != orderList.end(); ++iter) {
+        total += iter->quantity; 
+    }
+    return total; 
+}
