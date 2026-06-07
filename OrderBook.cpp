@@ -6,7 +6,7 @@
 #include <iostream>
 
 OrderBook::OrderBook() {
-    order_locations.reserve(10'000'000); 
+    //order_locations.reserve(1'000'000); 
 }
 
 std::vector<Trade> OrderBook::addOrder(Order order) {

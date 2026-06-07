@@ -1,6 +1,7 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -24,8 +25,9 @@ OrderType parseOrderType(const std::string& type) {
     throw std::invalid_argument("Invalid order type: " + type);
 }
 
-void printTrade(const Trade& trade) {
+void printTrade(const std::string& symbol, const Trade& trade) {
     std::cout << "TRADE "
+              << "symbol=" << symbol << " "
               << "resting=" << trade.restingOrderId << " "
               << "incoming=" << trade.incomingOrderId << " "
               << "price=" << trade.price << " "
@@ -56,17 +58,52 @@ int main(int argc, char* argv[]) {
 
         std::stringstream ss(line);
 
-        std::string command;
-        ss >> command;
+        std::string symbol;
+        ss >> symbol;
 
-        if (command == "ADD") {
+        std::string second_token;
+        ss >> second_token;
+
+        if (!ss) {
+            std::cerr << "Invalid line: " << line << '\n';
+            continue;
+        }
+
+        if (second_token == "CANCEL") {
             OrderId order_id;
+            ss >> order_id;
+
+            if (!ss) {
+                std::cerr << "Invalid cancel line: " << line << '\n';
+                continue;
+            }
+
+            bool cancelled = engine.cancelOrder(symbol, order_id);
+
+            if (cancelled) {
+                std::cout << "CANCELLED "
+                          << "symbol=" << symbol << " "
+                          << "id=" << order_id << '\n';
+            } else {
+                std::cout << "CANCEL_REJECTED "
+                          << "symbol=" << symbol << " "
+                          << "id=" << order_id << '\n';
+            }
+
+        } else {
+            OrderId order_id = std::stoull(second_token);
+
             std::string side_str;
             std::string type_str;
             Price price;
             Quantity quantity;
 
-            ss >> order_id >> side_str >> type_str >> price >> quantity;
+            ss >> side_str >> type_str >> price >> quantity;
+
+            if (!ss) {
+                std::cerr << "Invalid order line: " << line << '\n';
+                continue;
+            }
 
             Order order{
                 parseSide(side_str),
@@ -77,26 +114,11 @@ int main(int argc, char* argv[]) {
                 0
             };
 
-            std::vector<Trade> trades = engine.submitOrder(order);
+            std::vector<Trade> trades = engine.submitOrder(symbol, order);
 
             for (const Trade& trade : trades) {
-                printTrade(trade);
+                printTrade(symbol, trade);
             }
-
-        } else if (command == "CANCEL") {
-            OrderId order_id;
-            ss >> order_id;
-
-            bool cancelled = engine.cancelOrder(order_id);
-
-            if (cancelled) {
-                std::cout << "CANCELLED " << order_id << '\n';
-            } else {
-                std::cout << "CANCEL_REJECTED " << order_id << '\n';
-            }
-
-        } else {
-            std::cerr << "Unknown command: " << command << '\n';
         }
     }
 

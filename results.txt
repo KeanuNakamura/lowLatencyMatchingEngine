@@ -54,3 +54,35 @@ p95 latency: 500 ns
 p99 latency: 1583 ns
 Max latency: 37291 ns
 
+Multiple Stocks:
+Events processed: 10000000
+Symbols: 5
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 8999476
+Cancel attempts: 1000524
+Successful cancels: 198205
+Trades generated: 6982962
+Total time: 2.67443 seconds
+Throughput: 3.73912e+06 events/sec
+Average latency: 267.443 ns/event
+p50 latency: 125 ns
+p95 latency: 750 ns
+p99 latency: 1875 ns
+Max latency: 14035000 ns
+
+Multiple Stocks(Reserving hashmap capacity)
+Events processed: 10000000
+Symbols: 5
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 8999476
+Cancel attempts: 1000524
+Successful cancels: 198205
+Trades generated: 6982962
+Total time: 2.19084 seconds
+Throughput: 4.56446e+06 events/sec
+Average latency: 219.084 ns/event
+p50 latency: 84 ns
+p95 latency: 708 ns
+p99 latency: 1833 ns
+Max latency: 11513333 ns
+

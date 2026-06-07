@@ -2,24 +2,42 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 
 #include "MatchingEngine.h"
 
+struct ActiveOrder {
+    std::string symbol;
+    OrderId order_id;
+};
+
 int main() {
     constexpr int NUM_EVENTS = 10'000'000;
+
+    // Easily change this list to control which symbols are used.
+    std::vector<std::string> symbols{
+        "AAPL",
+        "MSFT",
+        "GOOG",
+        "AMZN",
+        "NVDA"
+    };
+
+    const int NUM_SYMBOLS = static_cast<int>(symbols.size());
 
     MatchingEngine engine;
 
     std::mt19937 rng(42);
 
+    std::uniform_int_distribution<int> symbol_dist(0, NUM_SYMBOLS - 1);
     std::uniform_int_distribution<int> side_dist(0, 1);
     std::uniform_int_distribution<int> price_dist(9900, 10100);
     std::uniform_int_distribution<int> quantity_dist(1, 100);
     std::uniform_int_distribution<int> event_dist(1, 100);
 
-    std::vector<OrderId> active_order_ids;
-    active_order_ids.reserve(NUM_EVENTS);
+    std::vector<ActiveOrder> active_orders;
+    active_orders.reserve(NUM_EVENTS);
 
     std::vector<long long> latencies_ns;
     latencies_ns.reserve(NUM_EVENTS);
@@ -34,30 +52,35 @@ int main() {
     auto total_start = std::chrono::high_resolution_clock::now();
 
     for (int i = 0; i < NUM_EVENTS; ++i) {
-        bool do_cancel = !active_order_ids.empty() && event_dist(rng) <= 10;
+        bool do_cancel = !active_orders.empty() && event_dist(rng) <= 10;
 
         auto event_start = std::chrono::high_resolution_clock::now();
 
         if (do_cancel) {
             std::uniform_int_distribution<std::size_t> index_dist(
-                0, active_order_ids.size() - 1
+                0,
+                active_orders.size() - 1
             );
 
             std::size_t index = index_dist(rng);
-            OrderId order_id = active_order_ids[index];
 
-            bool cancelled = engine.cancelOrder(order_id);
+            const std::string& symbol = active_orders[index].symbol;
+            OrderId order_id = active_orders[index].order_id;
+
+            bool cancelled = engine.cancelOrder(symbol, order_id);
 
             ++cancels_submitted;
 
             if (cancelled) {
                 ++successful_cancels;
 
-                active_order_ids[index] = active_order_ids.back();
-                active_order_ids.pop_back();
+                active_orders[index] = active_orders.back();
+                active_orders.pop_back();
             }
 
         } else {
+            const std::string& symbol = symbols[symbol_dist(rng)];
+
             Side side = side_dist(rng) == 0 ? Side::Buy : Side::Sell;
             Price price = price_dist(rng);
             Quantity quantity = quantity_dist(rng);
@@ -71,12 +94,13 @@ int main() {
                 0
             };
 
-            std::vector<Trade> trades = engine.submitOrder(order);
+            std::vector<Trade> trades = engine.submitOrder(symbol, order);
 
             trades_generated += trades.size();
             ++orders_submitted;
 
-            active_order_ids.push_back(next_order_id);
+            active_orders.push_back(ActiveOrder{symbol, next_order_id});
+
             ++next_order_id;
         }
 
@@ -104,8 +128,9 @@ int main() {
     };
 
     double seconds = elapsed.count();
-    double throughput = NUM_EVENTS / seconds;
-    double avg_latency_ns = (seconds * 1'000'000'000.0) / NUM_EVENTS;
+    double throughput = static_cast<double>(NUM_EVENTS) / seconds;
+    double avg_latency_ns =
+        (seconds * 1'000'000'000.0) / static_cast<double>(NUM_EVENTS);
 
     long long p50_latency = percentile(0.50);
     long long p95_latency = percentile(0.95);
@@ -113,6 +138,14 @@ int main() {
     long long max_latency = latencies_ns.back();
 
     std::cout << "Events processed: " << NUM_EVENTS << '\n';
+    std::cout << "Symbols: " << NUM_SYMBOLS << '\n';
+
+    std::cout << "Symbol list: ";
+    for (const std::string& symbol : symbols) {
+        std::cout << symbol << ' ';
+    }
+    std::cout << '\n';
+
     std::cout << "Orders submitted: " << orders_submitted << '\n';
     std::cout << "Cancel attempts: " << cancels_submitted << '\n';
     std::cout << "Successful cancels: " << successful_cancels << '\n';
