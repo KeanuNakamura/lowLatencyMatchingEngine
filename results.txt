@@ -1,0 +1,13 @@
+First version benchmark results (no optimizations) 
+Events processed: 1000000
+Orders submitted: 899758
+Cancel attempts: 100242
+Successful cancels: 19917
+Trades generated: 697464
+Total time: 0.196179 seconds
+Throughput: 5.09739e+06 events/sec
+Average latency: 196.179 ns/event
+p50 latency: 84 ns
+p95 latency: 542 ns
+p99 latency: 1417 ns
+Max latency: 714583 ns

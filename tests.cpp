@@ -1,7 +1,6 @@
 #include <cassert>
 #include <iostream>
-
-#include "OrderBook.h"
+#include "MatchingEngine.h" 
 
 void test_empty_book_has_zero_quantity(){
     OrderBook book; 
@@ -86,6 +85,18 @@ void testCancellation() {
     assert(book.cancelOrder(1) == false); 
     assert(book.cancelOrder(300) == false); 
 }
+
+void testMatchingEngine() {
+    MatchingEngine engine; 
+    Order order1{Side::Buy, OrderType::Limit, 1, 50, 20, 1};
+    Order order2{Side::Buy, OrderType::Limit, 2, 50, 40, 2};
+    engine.submitOrder(order1); 
+    engine.submitOrder(order2); 
+    assert(engine.quantityAtBid(50) == 60); 
+    engine.cancelOrder(order1.id); 
+    assert(engine.quantityAtBid(50) == 40); 
+}
+
 
 int main() {
     test_empty_book_has_zero_quantity(); 
