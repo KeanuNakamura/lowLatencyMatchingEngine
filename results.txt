@@ -1,13 +1,56 @@
 First version benchmark results (no optimizations) 
-Events processed: 1000000
-Orders submitted: 899758
-Cancel attempts: 100242
-Successful cancels: 19917
-Trades generated: 697464
-Total time: 0.196179 seconds
-Throughput: 5.09739e+06 events/sec
-Average latency: 196.179 ns/event
+Events processed: 10000000
+Orders submitted: 9000080
+Cancel attempts: 999920
+Successful cancels: 198107
+Trades generated: 6981113
+Total time: 2.01286 seconds
+Throughput: 4.96805e+06 events/sec
+Average latency: 201.286 ns/event
 p50 latency: 84 ns
 p95 latency: 542 ns
-p99 latency: 1417 ns
-Max latency: 714583 ns
+p99 latency: 1625 ns
+Max latency: 68469000 ns
+
+Second version: reserving hashmap capacity (reduces rehashing)
+Events processed: 10000000
+Orders submitted: 9000080
+Cancel attempts: 999920
+Successful cancels: 198107
+Trades generated: 6981113
+Total time: 1.6414 seconds
+Throughput: 6.09234e+06 events/sec
+Average latency: 164.14 ns/event
+p50 latency: 83 ns
+p95 latency: 500 ns
+p99 latency: 1583 ns
+Max latency: 40500 ns
+
+Second version(2) 
+Events processed: 10000000
+Orders submitted: 9000080
+Cancel attempts: 999920
+Successful cancels: 198107
+Trades generated: 6981113
+Total time: 1.63493 seconds
+Throughput: 6.11648e+06 events/sec
+Average latency: 163.493 ns/event
+p50 latency: 83 ns
+p95 latency: 500 ns
+p99 latency: 1583 ns
+Max latency: 35292 ns
+
+Second version(3)
+Events processed: 10000000
+Orders submitted: 9000080
+Cancel attempts: 999920
+Successful cancels: 198107
+Trades generated: 6981113
+Total time: 1.6419 seconds
+Throughput: 6.09051e+06 events/sec
+Average latency: 164.19 ns/event
+p50 latency: 83 ns
+p95 latency: 500 ns
+p99 latency: 1583 ns
+Max latency: 37291 ns
+

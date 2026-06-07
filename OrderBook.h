@@ -4,12 +4,14 @@
 #include <map> 
 #include <unordered_map> 
 #include <list> 
+#include <deque> 
 #include <vector> 
 #include "Order.h" 
 #include "Trade.h"
 
 class OrderBook {
     public: 
+        OrderBook(); 
         std::vector<Trade> addOrder(Order order);
         bool cancelOrder(OrderId id); 
 
@@ -17,7 +19,7 @@ class OrderBook {
         std::optional<Price> bestAsk() const; 
         Quantity quantityAtBid(Price price) const; 
         Quantity quantityAtAsk(Price price) const; 
-
+        
     private:
 
         std::vector<Trade> sellOrder(Order order); 

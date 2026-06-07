@@ -7,7 +7,7 @@
 #include "MatchingEngine.h"
 
 int main() {
-    constexpr int NUM_EVENTS = 1'000'000;
+    constexpr int NUM_EVENTS = 10'000'000;
 
     MatchingEngine engine;
 

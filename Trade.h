@@ -8,6 +8,9 @@ struct Trade {
     Price price;
     Quantity quantity;     
 
+    Trade(OrderId restingId, OrderId incomingId, Price p, Quantity q) 
+        :restingOrderId{restingId}, incomingOrderId{incomingId}, price{p}, quantity{q} {}
+
     bool operator==(const Trade& other) const {
     return restingOrderId == other.restingOrderId &&
            incomingOrderId == other.incomingOrderId &&

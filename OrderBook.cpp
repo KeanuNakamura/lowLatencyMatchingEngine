@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <iostream>
 
+OrderBook::OrderBook() {
+    order_locations.reserve(10'000'000); 
+}
+
 std::vector<Trade> OrderBook::addOrder(Order order) {
     if (order.side == Side::Buy) {
         return buyOrder(order);
@@ -29,6 +33,7 @@ std::vector<Trade> OrderBook::buyOrder(Order order){
         Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
         Trade trade{firstOrder.id, order.id, bestAsk, tradeQuantity}; 
         trades.push_back(trade); 
+        //trades.emplace_back(firstOrder.id, order.id, bestAsk, tradeQuantity); 
         
         order.quantity -= tradeQuantity; 
         firstOrder.quantity -= tradeQuantity; 
@@ -67,7 +72,7 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
         Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
         Trade trade{firstOrder.id, order.id, bestBid, tradeQuantity}; 
         trades.push_back(trade); 
-        
+        //trades.emplace_back(firstOrder.id, order.id, bestBid, tradeQuantity);  
         order.quantity -= tradeQuantity; 
         firstOrder.quantity -= tradeQuantity; 
         
@@ -124,6 +129,7 @@ std::optional<Price> OrderBook::bestBid() const {
 }
 
 std::optional<Price> OrderBook::bestAsk() const {
+
     if (asks.empty()) {
         return std::nullopt; 
     }
