@@ -22,8 +22,11 @@ class OrderBook {
         
     private:
 
-        std::vector<Trade> sellOrder(Order order); 
-        std::vector<Trade> buyOrder(Order order); 
+        std::vector<Trade> sellOrderLimit(Order order); 
+        std::vector<Trade> sellOrderMarket(Order order); 
+        std::vector<Trade> buyOrderLimit(Order order); 
+        std::vector<Trade> buyOrderMarket(Order order); 
+
         using OrderList = std::list<Order>; 
         std::map<Price, OrderList, std::greater<Price>> bids; //greatest to lowest
         std::map<Price, OrderList> asks;  //sorted lowest to greatest

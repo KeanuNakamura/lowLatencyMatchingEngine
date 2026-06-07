@@ -10,15 +10,19 @@ OrderBook::OrderBook() {
 }
 
 std::vector<Trade> OrderBook::addOrder(Order order) {
-    if (order.side == Side::Buy) {
-        return buyOrder(order);
-    } else {
-        return sellOrder(order); 
-    }
+    if (order.side == Side::Buy && order.type == OrderType::Limit) {
+        return buyOrderLimit(order);
+    } else if (order.side == Side::Buy && order.type == OrderType::Market) {
+        return buyOrderMarket(order); 
+    } else if (order.side == Side::Sell && order.type == OrderType::Limit) {
+        return sellOrderLimit(order); 
+    } else if (order.side == Side::Sell && order.type == OrderType::Market) {
+        return sellOrderMarket(order); 
+    } 
 }
 
 
-std::vector<Trade> OrderBook::buyOrder(Order order){
+std::vector<Trade> OrderBook::buyOrderLimit(Order order){
     std::vector<Trade> trades; 
     while (order.quantity > 0 && !asks.empty()) {
         auto it = asks.begin(); 
@@ -26,7 +30,7 @@ std::vector<Trade> OrderBook::buyOrder(Order order){
         OrderList& orderlist = it->second; 
         Order& firstOrder = orderlist.front(); 
         
-        if (order.type == OrderType::Limit && order.price < bestAsk) {
+        if (order.price < bestAsk) {
            break;  
         }
 
@@ -44,7 +48,7 @@ std::vector<Trade> OrderBook::buyOrder(Order order){
             order_locations.erase(askId);  
         }
         if (orderlist.empty()) {
-            asks.erase(bestAsk); 
+            asks.erase(it); 
         }
     }
     if (order.quantity > 0) {
@@ -56,8 +60,32 @@ std::vector<Trade> OrderBook::buyOrder(Order order){
     return trades; 
 }
 
+std::vector<Trade> OrderBook::buyOrderMarket(Order order){
+    std::vector<Trade> trades; 
+    while (order.quantity > 0 && !asks.empty()) {
+        auto it = asks.begin(); 
+        Price price = it->first; 
+        OrderList& orderlist = it->second;
+        Order& firstOrder = orderlist.front(); 
+        Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
 
-std::vector<Trade> OrderBook::sellOrder(Order order){
+        Trade trade{firstOrder.id, order.id, price, tradeQuantity}; 
+        trades.push_back(trade); 
+
+        order.quantity -= tradeQuantity; 
+        firstOrder.quantity -= tradeQuantity; 
+        if (firstOrder.quantity == 0) {
+            order_locations.erase(firstOrder.id); 
+            orderlist.pop_front(); 
+        }
+        if (orderlist.empty()) {
+            asks.erase(it); 
+        }
+    } 
+    return trades;  
+}
+
+std::vector<Trade> OrderBook::sellOrderLimit(Order order){
     std::vector<Trade> trades; 
     while (order.quantity > 0 && !bids.empty()) {
         auto it = bids.begin(); 
@@ -65,7 +93,7 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
         OrderList& orderlist = it->second; 
         Order& firstOrder = orderlist.front(); 
         
-        if (order.type == OrderType::Limit && order.price > bestBid) {
+        if (order.price > bestBid) {
            break;  
         }
 
@@ -82,7 +110,7 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
             order_locations.erase(BidId);  
         }
         if (orderlist.empty()) {
-            bids.erase(bestBid); 
+            bids.erase(it); 
         }
     }
     if (order.quantity > 0) {
@@ -93,6 +121,33 @@ std::vector<Trade> OrderBook::sellOrder(Order order){
     }
     return trades; 
 }
+
+
+std::vector<Trade> OrderBook::sellOrderMarket(Order order){
+    std::vector<Trade> trades; 
+    while (order.quantity > 0 && !bids.empty()) {
+        auto it = bids.begin(); 
+        Price price = it->first; 
+        OrderList& orderlist = it->second;
+        Order& firstOrder = orderlist.front(); 
+        Quantity tradeQuantity = std::min(order.quantity, firstOrder.quantity); 
+
+        Trade trade{firstOrder.id, order.id, price, tradeQuantity}; 
+        trades.push_back(trade); 
+
+        order.quantity -= tradeQuantity; 
+        firstOrder.quantity -= tradeQuantity; 
+        if (firstOrder.quantity == 0) {
+            order_locations.erase(firstOrder.id); 
+            orderlist.pop_front(); 
+        }
+        if (orderlist.empty()) {
+            bids.erase(it); 
+        }
+    } 
+    return trades;  
+}
+
 
 bool OrderBook::cancelOrder(OrderId order_id) {
     auto it = order_locations.find(order_id); 
