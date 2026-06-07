@@ -6,13 +6,13 @@
 
 class MatchingEngine{
     public: 
-        std::vector<Trade> submitOrder(Order order); 
-        bool cancelOrder(OrderId order_id); 
-        Quantity quantityAtBid(Price price) const; 
-        Quantity quantityAtAsk(Price price) const; 
+        std::vector<Trade> submitOrder(const std::string& symbol, Order order); 
+        bool cancelOrder(const std::string& symbol, OrderId order_id); 
+        Quantity quantityAtBid(const std::string& symbol, Price price) const; 
+        Quantity quantityAtAsk(const std::string& symbol, Price price) const; 
 
     private:
-        OrderBook book;
+        std::unordered_map<std::string, OrderBook> books; 
         Timestamp current_time = 0; 
 };
 #endif
