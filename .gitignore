@@ -216,3 +216,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Compiled executables
+benchmark
+tests
+matching_engine
+benchmark_runner
+tests_runner
+
+# macOS
+.DS_Store
+
+# Build outputs
+build/
+*.o
+*.out
