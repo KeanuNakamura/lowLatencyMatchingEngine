@@ -1,56 +1,6 @@
 # Low-Latency Matching Engine
 
-A C++ matching engine that simulates the core order-matching logic used by electronic exchanges. The engine supports multiple stock symbols, independent order books per symbol, limit orders, market orders, cancellations, trade generation, and latency benchmarking.
-
-
-## Features
-
-- Supports multiple stock symbols
-- Maintains one independent `OrderBook` per symbol
-- Supports buy and sell limit orders
-- Supports buy and sell market orders
-- Supports order cancellation by symbol and order ID
-- Matches orders using price-time priority
-- Tracks resting orders for fast cancellation
-- Generates trade records when orders match
-- Includes benchmark code for throughput and latency measurement
-- Reports average, p50, p95, p99, p99.9, p99.99, and max latency
-- Supports optional hash map capacity reservation to reduce rehashing spikes
-
-## Core Types
-
-The engine uses simple type aliases for order-related data:
-
-```cpp
-using OrderId = std::uint64_t;
-using Price = std::int64_t;
-using Quantity = std::uint64_t;
-using Timestamp = std::uint64_t;
-```
-
-Orders are represented as:
-
-```cpp
-struct Order {
-    Side side;
-    OrderType type;
-    OrderId id;
-    Price price;
-    Quantity quantity;
-    Timestamp timestamp;
-};
-```
-
-Trades are represented as:
-
-```cpp
-struct Trade {
-    OrderId restingOrderId;
-    OrderId incomingOrderId;
-    Price price;
-    Quantity quantity;
-};
-```
+A C++ matching engine that simulates the core order-matching logic used by electronic exchanges. The engine supports multiple stock symbols, independent order books per symbol, limit and market orders, cancellations, trade generation, and latency benchmarking (p50 - p99, max).
 
 ## Matching Logic
 
@@ -149,25 +99,6 @@ std::vector<std::string> symbols{
 };
 ```
 
-The benchmark reports:
-
-- Events processed
-- Orders submitted
-- Cancel attempts
-- Successful cancels
-- Trades generated
-- Total runtime
-- Throughput
-- Average latency
-- p50 latency
-- p95 latency
-- p99 latency
-- p99.9 latency
-- p99.99 latency
-- Max latency
-
-Example output:
-
 ```txt
 Events processed: 10000000
 Symbols: 5
@@ -186,27 +117,6 @@ p999 latency: 3542 ns
 p9999 latency: 6125 ns
 Max latency: 42042 ns
 ```
-
-## Hash Map Reservation
-
-The matching engine can reserve hash map capacity for the top-level symbol map and for each order book’s `order_locations` map.
-
-This reduces expensive `unordered_map` rehashing during benchmark runs.
-
-Example:
-
-```cpp
-MatchingEngine engine(symbols.size());
-
-std::size_t expected_orders_per_symbol =
-    NUM_EVENTS / symbols.size();
-
-for (const std::string& symbol : symbols) {
-    engine.addSymbol(symbol, expected_orders_per_symbol);
-}
-```
-
-Benchmark results showed that reserving capacity does not significantly change average latency, but it can reduce worst-case latency spikes.
 
 ## Unit Tests
 
