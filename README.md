@@ -294,30 +294,3 @@ Run the tests:
 ./tests
 ```
 
-## Design Goals
-
-The main goals of this project are:
-
-- Build a realistic simplified exchange matching engine
-- Practice modern C++ data structures
-- Understand price-time priority matching
-- Optimize cancellation using hash maps
-- Measure throughput and latency
-- Study tail-latency effects such as hash map rehashing
-
-## Future Improvements
-
-Possible future additions:
-
-- Stop orders
-- Immediate-or-cancel orders
-- Fill-or-kill orders
-- Order modification
-- Better benchmark workload modeling
-- Per-symbol benchmark statistics
-- CSV output for benchmark results
-- Multithreaded symbol partitioning
-- Custom memory allocator
-- Lock-free queues for event ingestion
-- Binary protocol input format
-- More realistic market data simulation
