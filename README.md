@@ -2,7 +2,6 @@
 
 A C++ matching engine that simulates the core order-matching logic used by electronic exchanges. The engine supports multiple stock symbols, independent order books per symbol, limit orders, market orders, cancellations, trade generation, and latency benchmarking.
 
-This project is designed to demonstrate low-level C++ data structure design, performance-aware programming, and exchange-style matching logic.
 
 ## Features
 
@@ -267,14 +266,14 @@ Compile the benchmark:
 
 ```bash
 g++ -std=c++17 -O3 -Iinclude \
-    src/benchmark.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
-    -o benchmark
+    benchmark/benchmark.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    -o benchmark_runner
 ```
 
 Run the benchmark:
 
 ```bash
-./benchmark
+./benchmark_runner
 ```
 
 ### Unit Tests
@@ -283,14 +282,14 @@ Compile the tests:
 
 ```bash
 g++ -std=c++17 -O3 -Iinclude \
-    tests.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    tests/tests.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
     -lgtest -lgtest_main -pthread \
-    -o tests
+    -o tests_runner
 ```
 
 Run the tests:
 
 ```bash
-./tests
+./tests_runner
 ```
 
