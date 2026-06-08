@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <iostream>
 
-OrderBook::OrderBook() {
-    //order_locations.reserve(1'000'000); 
+OrderBook::OrderBook() = default;
+
+OrderBook::OrderBook(std::size_t expected_orders) {
+    order_locations.reserve(expected_orders); 
 }
 
 std::vector<Trade> OrderBook::addOrder(Order order) {

@@ -1,5 +1,16 @@
 #include "MatchingEngine.h" 
 
+MatchingEngine::MatchingEngine(std::size_t expected_symbols) {
+    books.reserve(expected_symbols);
+}
+
+void MatchingEngine::addSymbol(
+    const std::string& symbol,
+    std::size_t expected_orders
+) {
+    books.emplace(symbol, OrderBook(expected_orders));
+}
+
 std::vector<Trade> MatchingEngine::submitOrder(const std::string& symbol, Order order) {
     order.timestamp = current_time++;
     return books[symbol].addOrder(order); 

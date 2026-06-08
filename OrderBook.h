@@ -9,10 +9,12 @@
 #include <vector> 
 #include "Order.h" 
 #include "Trade.h"
+#include <cstddef>
 
 class OrderBook {
     public: 
-        OrderBook(); 
+        OrderBook();
+        explicit OrderBook(std::size_t expected_orders); 
         std::vector<Trade> addOrder(Order order);
         bool cancelOrder(OrderId id); 
 

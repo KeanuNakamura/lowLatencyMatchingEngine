@@ -26,7 +26,11 @@ int main() {
 
     const int NUM_SYMBOLS = static_cast<int>(symbols.size());
 
-    MatchingEngine engine;
+    MatchingEngine engine(NUM_SYMBOLS);
+    std::size_t expected_orders_per_symbol = static_cast<std::size_t>(NUM_EVENTS / symbols.size());
+    for (const std::string& symbol : symbols) {
+        engine.addSymbol(symbol, expected_orders_per_symbol);
+    }
 
     std::mt19937 rng(42);
 
@@ -135,6 +139,8 @@ int main() {
     long long p50_latency = percentile(0.50);
     long long p95_latency = percentile(0.95);
     long long p99_latency = percentile(0.99);
+    long long p999_latency = percentile(0.999);
+    long long p9999_latency = percentile(0.9999);
     long long max_latency = latencies_ns.back();
 
     std::cout << "Events processed: " << NUM_EVENTS << '\n';
@@ -158,6 +164,9 @@ int main() {
     std::cout << "p50 latency: " << p50_latency << " ns\n";
     std::cout << "p95 latency: " << p95_latency << " ns\n";
     std::cout << "p99 latency: " << p99_latency << " ns\n";
+    
+    std::cout << "p99.9 latency: " << p999_latency << " ns\n";
+    std::cout << "p99.99 latency: " << p9999_latency << " ns\n";
     std::cout << "Max latency: " << max_latency << " ns\n";
 
     return 0;

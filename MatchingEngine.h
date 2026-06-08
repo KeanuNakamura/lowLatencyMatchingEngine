@@ -6,6 +6,9 @@
 
 class MatchingEngine{
     public: 
+        MatchingEngine() = default;
+        explicit MatchingEngine(std::size_t expected_symbols);
+        void addSymbol(const std::string& symbol, std::size_t expected_orders);
         std::vector<Trade> submitOrder(const std::string& symbol, Order order); 
         bool cancelOrder(const std::string& symbol, OrderId order_id); 
         Quantity quantityAtBid(const std::string& symbol, Price price) const; 

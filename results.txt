@@ -86,3 +86,38 @@ p95 latency: 708 ns
 p99 latency: 1833 ns
 Max latency: 11513333 ns
 
+Multiple Stocks(Reserving books and hashmap capacity. Hashmap capacity is total orders / books per book
+Events processed: 10000000
+Symbols: 5
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 8999476
+Cancel attempts: 1000524
+Successful cancels: 198205
+Trades generated: 6982962
+Total time: 2.2108 seconds
+Throughput: 4.52324e+06 events/sec
+Average latency: 221.08 ns/event
+p50 latency: 125 ns
+p95 latency: 708 ns
+p99 latency: 1833 ns
+p999 latency: 3542 ns
+p9999 latency: 6125 ns
+Max latency: 42042 ns
+
+Multiple Stocks(Hashmap capacity is total orders / books / 4)
+Events processed: 10000000
+Symbols: 5
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 8999476
+Cancel attempts: 1000524
+Successful cancels: 198205
+Trades generated: 6982962
+Total time: 2.39019 seconds
+Throughput: 4.18376e+06 events/sec
+Average latency: 239.019 ns/event
+p50 latency: 125 ns
+p95 latency: 750 ns
+p99 latency: 1875 ns
+p999 latency: 3625 ns
+p9999 latency: 6208 ns
+Max latency: 40875 ns
