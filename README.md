@@ -17,26 +17,6 @@ A C++ matching engine that simulates the core order-matching logic used by elect
 - Reports average, p50, p95, p99, p99.9, p99.99, and max latency
 - Supports optional hash map capacity reservation to reduce rehashing spikes
 
-## Project Structure
-
-```txt
-lowlatency/
-├── include/
-│   ├── Order.h
-│   ├── Trade.h
-│   ├── OrderBook.h
-│   └── MatchingEngine.h
-│
-├── src/
-│   ├── OrderBook.cpp
-│   ├── MatchingEngine.cpp
-│   ├── main.cpp
-│   └── benchmark.cpp
-│
-├── tests.cpp
-└── README.md
-```
-
 ## Core Types
 
 The engine uses simple type aliases for order-related data:
@@ -270,11 +250,6 @@ g++ -std=c++17 -O3 -Iinclude \
     -o benchmark_runner
 ```
 
-Run the benchmark:
-
-```bash
-./benchmark_runner
-```
 
 ### Unit Tests
 
@@ -282,14 +257,10 @@ Compile the tests:
 
 ```bash
 g++ -std=c++17 -O3 -Iinclude \
+    -I/opt/homebrew/include \
     tests/tests.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    -L/opt/homebrew/lib \
     -lgtest -lgtest_main -pthread \
     -o tests_runner
-```
-
-Run the tests:
-
-```bash
-./tests_runner
 ```
 
