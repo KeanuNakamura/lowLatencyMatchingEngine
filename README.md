@@ -21,15 +21,19 @@ This project is designed to demonstrate low-level C++ data structure design, per
 ## Project Structure
 
 ```txt
-.
-├── Order.h
-├── Trade.h
-├── OrderBook.h
-├── OrderBook.cpp
-├── MatchingEngine.h
-├── MatchingEngine.cpp
-├── main.cpp
-├── benchmark.cpp
+lowlatency/
+├── include/
+│   ├── Order.h
+│   ├── Trade.h
+│   ├── OrderBook.h
+│   └── MatchingEngine.h
+│
+├── src/
+│   ├── OrderBook.cpp
+│   ├── MatchingEngine.cpp
+│   ├── main.cpp
+│   └── benchmark.cpp
+│
 ├── tests.cpp
 └── README.md
 ```
@@ -148,20 +152,6 @@ CANCELLED symbol=AAPL id=1
 CANCEL_REJECTED symbol=AAPL id=999
 ```
 
-## Building
-
-Compile the main program with:
-
-```bash
-g++ -std=c++17 main.cpp MatchingEngine.cpp OrderBook.cpp -o matching_engine
-```
-
-Run with:
-
-```bash
-./matching_engine input.txt
-```
-
 ## Benchmarking
 
 The benchmark simulates millions of randomized order and cancel events.
@@ -253,15 +243,52 @@ The project can be tested with GoogleTest. The tests cover:
 - Symbol isolation
 - Market orders
 
-Example test command:
+## Building and Running
+
+### Main Program
+
+Compile the main program:
 
 ```bash
-g++ -std=c++17 tests.cpp MatchingEngine.cpp OrderBook.cpp \
+g++ -std=c++17 -O3 -Iinclude \
+    src/main.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    -o matching_engine
+```
+
+Run with an input file:
+
+```bash
+./matching_engine input.txt
+```
+
+### Benchmark
+
+Compile the benchmark:
+
+```bash
+g++ -std=c++17 -O3 -Iinclude \
+    src/benchmark.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    -o benchmark
+```
+
+Run the benchmark:
+
+```bash
+./benchmark
+```
+
+### Unit Tests
+
+Compile the tests:
+
+```bash
+g++ -std=c++17 -O3 -Iinclude \
+    tests.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
     -lgtest -lgtest_main -pthread \
     -o tests
 ```
 
-Run tests with:
+Run the tests:
 
 ```bash
 ./tests
