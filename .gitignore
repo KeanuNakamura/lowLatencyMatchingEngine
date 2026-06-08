@@ -219,8 +219,6 @@ __marimo__/
 
 
 # Compiled executables
-benchmark
-tests
 matching_engine
 benchmark_runner
 tests_runner
