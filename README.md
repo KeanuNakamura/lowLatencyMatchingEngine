@@ -85,6 +85,17 @@ CANCEL_REJECTED symbol=AAPL id=999
 
 The benchmark simulates millions of randomized order and cancel events.
 
+By default, the benchmark runs in **symbol-parallel mode** for HPC throughput:
+
+1. All events are pre-generated with a fixed RNG seed.
+2. Events are partitioned by symbol while preserving per-symbol order.
+3. Each worker thread owns its own `OrderBook` instances (constructed in-thread for NUMA first-touch).
+4. Parallelism uses `std::thread` by default; pass `--openmp` to use OpenMP instead.
+
+Symbols are independent, so this parallelization is lock-free and scales with symbol count up to the number of worker threads. Use `--symbols` to increase the number of independent books on large nodes, and `--threads` to control worker count.
+
+Per-event latency sampling is **disabled by default** in parallel mode because timing every event adds significant overhead at scale. Use `--latency` when you need percentile stats. Use `--sequential` for the original single-threaded interleaved event loop.
+
 Example benchmark configuration:
 
 ```cpp
@@ -152,12 +163,53 @@ Run with an input file:
 
 ### Benchmark
 
-Compile the benchmark:
+Compile the benchmark (std::thread parallelism; add `-fopenmp` only if you want `--openmp`):
 
 ```bash
-g++ -std=c++17 -O3 -Iinclude \
+g++ -std=c++17 -O3 -pthread -Iinclude \
     benchmark/benchmark.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
     -o benchmark_runner
+```
+
+Run the default symbol-parallel benchmark:
+
+```bash
+./benchmark_runner
+```
+
+Run with more symbols and explicit thread count for HPC scaling:
+
+```bash
+./benchmark_runner --symbols 64 --threads 32
+```
+
+Run the original single-threaded latency profile:
+
+```bash
+./benchmark_runner --sequential
+```
+
+Record per-event latency percentiles in parallel mode:
+
+```bash
+./benchmark_runner --latency
+```
+
+Optional OpenMP backend (rebuild with `-fopenmp`):
+
+```bash
+g++ -std=c++17 -O3 -fopenmp -pthread -Iinclude \
+    benchmark/benchmark.cpp src/MatchingEngine.cpp src/OrderBook.cpp \
+    -o benchmark_runner_omp
+
+./benchmark_runner_omp --openmp --symbols 64 --threads 32
+```
+
+On HPC nodes, bind threads to cores when using OpenMP:
+
+```bash
+export OMP_PROC_BIND=close
+export OMP_PLACES=cores
 ```
 
 

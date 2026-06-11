@@ -19,13 +19,16 @@ std::vector<Trade> OrderBook::addOrder(Order order) {
     } else if (order.side == Side::Sell && order.type == OrderType::Limit) {
         return sellOrderLimit(order); 
     } else if (order.side == Side::Sell && order.type == OrderType::Market) {
-        return sellOrderMarket(order); 
-    } 
+        return sellOrderMarket(order);
+    }
+
+    return {};
 }
 
 
 std::vector<Trade> OrderBook::buyOrderLimit(Order order){
-    std::vector<Trade> trades; 
+    std::vector<Trade> trades;
+    trades.reserve(4);
     while (order.quantity > 0 && !asks.empty()) {
         auto it = asks.begin(); 
         Price bestAsk = it->first;
@@ -63,7 +66,8 @@ std::vector<Trade> OrderBook::buyOrderLimit(Order order){
 }
 
 std::vector<Trade> OrderBook::buyOrderMarket(Order order){
-    std::vector<Trade> trades; 
+    std::vector<Trade> trades;
+    trades.reserve(4);
     while (order.quantity > 0 && !asks.empty()) {
         auto it = asks.begin(); 
         Price price = it->first; 
@@ -88,7 +92,8 @@ std::vector<Trade> OrderBook::buyOrderMarket(Order order){
 }
 
 std::vector<Trade> OrderBook::sellOrderLimit(Order order){
-    std::vector<Trade> trades; 
+    std::vector<Trade> trades;
+    trades.reserve(4);
     while (order.quantity > 0 && !bids.empty()) {
         auto it = bids.begin(); 
         Price bestBid = it->first;
@@ -126,7 +131,8 @@ std::vector<Trade> OrderBook::sellOrderLimit(Order order){
 
 
 std::vector<Trade> OrderBook::sellOrderMarket(Order order){
-    std::vector<Trade> trades; 
+    std::vector<Trade> trades;
+    trades.reserve(4);
     while (order.quantity > 0 && !bids.empty()) {
         auto it = bids.begin(); 
         Price price = it->first; 

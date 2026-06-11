@@ -121,3 +121,47 @@ p99 latency: 1875 ns
 p999 latency: 3625 ns
 p9999 latency: 6208 ns
 Max latency: 40875 ns
+
+
+Events processed: 50000000
+Symbols: 5
+Execution mode: symbol-parallel
+Worker threads: 5
+OpenMP: disabled (rebuild with -fopenmp for HPC parallelism)
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 45000151
+Cancel attempts: 4999849
+Successful cancels: 1078120
+Trades generated: 34923730
+Event generation time: 5.31945 seconds
+Processing time: 20.6856 seconds
+Total time: 40.887 seconds
+Throughput: 2.41715e+06 events/sec
+Average latency: 413.711 ns/event
+p50 latency: 108 ns
+p95 latency: 453 ns
+p99 latency: 1138 ns
+p99.99 latency: 159101 ns
+Max latency: 94018919 ns
+
+Events processed: 50000000
+Symbols: 5
+Execution mode: symbol-parallel
+Worker threads: 5
+OpenMP: enabled
+Symbol list: AAPL MSFT GOOG AMZN NVDA 
+Orders submitted: 45000151
+Cancel attempts: 4999849
+Successful cancels: 1078120
+Trades generated: 34923730
+Event generation time: 6.3999 seconds
+Processing time: 26.9425 seconds
+Total time: 48.8316 seconds
+Throughput: 1.8558e+06 events/sec
+Average latency: 538.85 ns/event
+p50 latency: 157 ns
+p95 latency: 727 ns
+p99 latency: 76520 ns
+p99.99 latency: 694394 ns
+Max latency: 57286416 ns
+
